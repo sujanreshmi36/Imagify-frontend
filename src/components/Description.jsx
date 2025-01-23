@@ -10,7 +10,7 @@ const Description = () => {
       <p className="text-lg text-gray-500 mb-8 ">
         Turn your imagination into visuals
       </p>
-      <div className="flex flex-col gap-5 md:gap-14 md:flex-row items-center">
+      <div className="flex flex-col gap-5 md:gap-14 md:flex-row items-center mt-7">
         <img
           src={assets.sample_img_1}
           alt=""
