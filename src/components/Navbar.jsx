@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import axios from "axios";
 const Navbar = () => {
-  const { user, setShowLogin } = useContext(AppContext);
+  const { user, setShowLogin, credit } = useContext(AppContext);
   const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between py-4">
@@ -16,10 +17,10 @@ const Navbar = () => {
             <button className="flex items-center gap-2 bg-blue-100 px-4 sm:px-6 py-1.5 sm:py-3 rounded-full hover:scale-105 transition-all duration-700">
               <img className="w-5" src={assets.credit_star} alt="" />
               <p className="text-xs sm:text-sm font-medium text-gray-600">
-                Credits left: 50
+                Credits left: {credit}
               </p>
             </button>
-            <p>Hi! Richard</p>
+            <p>Hi! {user.split(" ")[0]}</p>
             <div className="relative group">
               <img
                 src={assets.profile_icon}

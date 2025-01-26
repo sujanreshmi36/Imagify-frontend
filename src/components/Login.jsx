@@ -2,9 +2,56 @@ import React, { useEffect, useState, useContext } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "motion/react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [state, setState] = useState("Login");
-  const { setShowLogin } = useContext(AppContext);
+  const { setShowLogin, backendUrl, setToken, setUser } =
+    useContext(AppContext);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(backendUrl);
+
+      if (state === "Login") {
+        const response = await axios.post(backendUrl + "/auth/login", {
+          email,
+          password,
+        });
+        if (response.data.status) {
+          setToken(response.data.token);
+          setUser(response.data.user);
+          localStorage.setItem("token", response.data.token);
+          setShowLogin(false);
+          navigate("/");
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
+      } else {
+        const response = await axios.post(backendUrl + "/auth/register", {
+          name,
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setState("Login");
+          setEmail("");
+          setPassword("");
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (e) {
+      toast.error(e.response.data.message);
+    }
+  };
   useEffect(() => {
     document.body.style.overflow = "hidden"; //stops scrolling when component is mounted
     return () => {
@@ -19,6 +66,7 @@ const Login = () => {
         transition={{ duration: 0.3 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        onSubmit={submitHandler}
       >
         <h1 className="text-center text-2xl text-neutral-700 font-medium">
           {state}
@@ -35,6 +83,8 @@ const Login = () => {
               className="outline-none text-sm"
               type="text"
               placeholder="Full Name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               required
             />
           </div>
@@ -46,6 +96,8 @@ const Login = () => {
             className="outline-none text-sm"
             type="email"
             placeholder="Email Address"
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
             required
           />
         </div>
@@ -55,6 +107,8 @@ const Login = () => {
             className="outline-none text-sm"
             type="password"
             placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
             required
           />
         </div>
@@ -65,7 +119,10 @@ const Login = () => {
         ) : (
           <p className="my-8"></p>
         )}
-        <button className="bg-blue-600 w-full text-white py-2 rounded-full">
+        <button
+          className="bg-blue-600 w-full text-white py-2 rounded-full"
+          type="submit"
+        >
           {state === "Login" ? "Login" : "Create an account"}
         </button>
         {state !== "Login" ? (
