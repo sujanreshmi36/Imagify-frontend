@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 const Navbar = () => {
-  const { user, setShowLogin, credit } = useContext(AppContext);
+  const { user, setShowLogin, credit, logout } = useContext(AppContext);
   const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between py-4">
@@ -29,7 +29,12 @@ const Navbar = () => {
               />
               <div className="absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12">
                 <ul className="list-none m-0 p-2 bg-white rounded-md border text-sm">
-                  <li className="py-1 px-2 cursor-pointer pr-10">Logout</li>
+                  <li
+                    className="py-1 px-2 cursor-pointer pr-10"
+                    onClick={() => logout()}
+                  >
+                    Logout
+                  </li>
                 </ul>
               </div>
             </div>
