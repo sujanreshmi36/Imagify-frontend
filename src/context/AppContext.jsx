@@ -45,14 +45,16 @@ const AppContextProvider = (props) => {
         loadCredit();
       }
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e.response.data.message);
     }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    toast.success("Logged out successfully");
     setToken("");
     setUser(null);
+    navigate("/");
   };
 
   useEffect(() => {

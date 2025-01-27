@@ -19,37 +19,45 @@ const Login = () => {
       console.log(backendUrl);
 
       if (state === "Login") {
-        const response = await axios.post(backendUrl + "/auth/login", {
-          email,
-          password,
-        });
-        if (response.data.status) {
-          setToken(response.data.token);
-          setUser(response.data.user);
-          localStorage.setItem("token", response.data.token);
-          setShowLogin(false);
-          navigate("/");
-          toast.success(response.data.message);
-        } else {
-          toast.error(response.data.message);
+        try {
+          const response = await axios.post(backendUrl + "/auth/login", {
+            email,
+            password,
+          });
+          if (response.data.status) {
+            setToken(response.data.token);
+            setUser(response.data.user);
+            localStorage.setItem("token", response.data.token);
+            setShowLogin(false);
+            navigate("/");
+            toast.success(response.data.message);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (e) {
+          toast.error(e.response.data.message);
         }
       } else {
-        const response = await axios.post(backendUrl + "/auth/register", {
-          name,
-          email,
-          password,
-        });
-        if (response.data.success) {
-          setState("Login");
-          setEmail("");
-          setPassword("");
-          toast.success(response.data.message);
-        } else {
-          toast.error(response.data.message);
+        try {
+          const response = await axios.post(backendUrl + "/auth/register", {
+            name,
+            email,
+            password,
+          });
+          if (response.data.success) {
+            setState("Login");
+            setEmail("");
+            setPassword("");
+            toast.success(response.data.message);
+          } else {
+            toast.error(response.data.message);
+          }
+        } catch (e) {
+          toast.error(e.response.data.message);
         }
       }
     } catch (e) {
-      toast.error(e.response.message);
+      toast.error(e.response.data.message);
     }
   };
   useEffect(() => {
