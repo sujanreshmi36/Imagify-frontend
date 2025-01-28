@@ -10,6 +10,8 @@ import Login from "./components/Login";
 import { AppContext } from "./context/AppContext";
 
 import { ToastContainer } from "react-toastify";
+import Success from "./pages/Success";
+import Failure from "./pages/Failure";
 function App() {
   const { showLogin } = useContext(AppContext);
 
@@ -25,6 +27,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/buy" element={<BuyCredit />} />
         <Route path="/result" element={<Result />} />
+        <Route path="/payment-success" element={<Success />} />
+        <Route path="/payment-failure" element={<Failure />} />
       </Routes>
       <Footer />
     </div>
