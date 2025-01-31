@@ -1,17 +1,19 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { assets, plans } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "motion/react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { ClipLoader } from "react-spinners"; // Import the spinner
-import { useState } from "react";
+
 const BuyCredit = () => {
   const { user, setShowLogin, backendUrl, token } = useContext(AppContext);
-  const [loading, setLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState(null); // Track the loading state for each plan
+
   const handleClick = async (e, item) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingPlan(item.id); // Set loading state for the clicked plan
+
     try {
       if (e.target.innerText !== "Purchase") {
         setShowLogin(true);
@@ -32,9 +34,10 @@ const BuyCredit = () => {
     } catch (e) {
       toast.error(e.message);
     } finally {
-      setLoading(false);
+      setLoadingPlan(null); // Reset loading state
     }
   };
+
   return (
     <motion.div
       className="min-h-[80vh] text-center pt-14 mb-10"
@@ -59,15 +62,15 @@ const BuyCredit = () => {
             <p className="mt-3 mb-1 font-semibold">{item.id}</p>
             <p className="text-sm">{item.desc}</p>
             <p className="mt-6">
-              <span className="text-3xl font-medium">${item.price}</span> /
+              <span className="text-3xl font-medium">${item.price}</span> /{" "}
               {item.credits} credits
             </p>
             <button
               className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
               onClick={(e) => handleClick(e, item)}
             >
-              {loading ? (
-                <ClipLoader size={20} color={"#FFFFFF"} loading={loading} /> // Show loader if loading
+              {loadingPlan === item.id ? ( // Check if the current plan is in loading state
+                <ClipLoader size={20} color={"#FFFFFF"} loading={true} />
               ) : user ? (
                 "Purchase"
               ) : (
