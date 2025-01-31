@@ -2,8 +2,33 @@ import React, { useContext } from "react";
 import { assets, plans } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "motion/react";
+import { toast } from "react-toastify";
+import axios from "axios";
 const BuyCredit = () => {
-  const { user } = useContext(AppContext);
+  const { user, setShowLogin, backendUrl, token } = useContext(AppContext);
+  const handleClick = async (e, item) => {
+    e.preventDefault();
+    try {
+      if (e.target.innerText !== "Purchase") {
+        setShowLogin(true);
+      } else {
+        const response = await axios.post(
+          backendUrl + "/payment/initiate",
+          { plan: item.id },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (response.data.url) {
+          window.location.href = response.data.url; // Redirect to payment URL
+        } else {
+          toast.error("Payment URL not received.");
+        }
+      }
+    } catch (e) {
+      toast.error(e.message);
+    }
+  };
   return (
     <motion.div
       className="min-h-[80vh] text-center pt-14 mb-10"
@@ -31,7 +56,10 @@ const BuyCredit = () => {
               <span className="text-3xl font-medium">${item.price}</span> /
               {item.credits} credits
             </p>
-            <button className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52">
+            <button
+              className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
+              onClick={(e) => handleClick(e, item)}
+            >
               {user ? "Purchase" : "Get Started"}
             </button>
           </div>
