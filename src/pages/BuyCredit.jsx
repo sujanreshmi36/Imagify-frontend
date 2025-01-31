@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { ClipLoader } from "react-spinners"; // Import the spinner
+import { useState } from "react";
 const BuyCredit = () => {
   const { user, setShowLogin, backendUrl, token } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
