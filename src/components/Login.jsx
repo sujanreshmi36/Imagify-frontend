@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Puff } from "react-loader-spinner"; // Import Puff directly
+import { Puff } from "react-loader-spinner"; // Import Puff loader
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -138,7 +138,7 @@ const Login = () => {
           <p className="my-8"></p>
         )}
         <button
-          className="bg-blue-600 w-full text-white py-2 rounded-full"
+          className="bg-blue-600 w-full text-white py-2 rounded-full flex items-center justify-center"
           type="submit"
           disabled={loading} // Disable button when loading
         >
