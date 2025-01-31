@@ -5,6 +5,8 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Puff } from "react-loader-spinner"; // Import Puff directly
+
 const Login = () => {
   const [state, setState] = useState("Login");
   const { setShowLogin, backendUrl, setToken, setUser } =
@@ -12,9 +14,13 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate();
+
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loader
+
     try {
       console.log(backendUrl);
 
@@ -58,14 +64,18 @@ const Login = () => {
       }
     } catch (e) {
       toast.error(e.response.data.message);
+    } finally {
+      setLoading(false); // Stop loader
     }
   };
+
   useEffect(() => {
-    document.body.style.overflow = "hidden"; //stops scrolling when component is mounted
+    document.body.style.overflow = "hidden"; // Stops scrolling when component is mounted
     return () => {
-      document.body.style.overflow = "unset"; //enable scrolling when component is unmounted
+      document.body.style.overflow = "unset"; // Enables scrolling when component is unmounted
     };
   }, []);
+
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 z-10 backdrop-blur-sm bg-black/30 flex justify-center items-center">
       <motion.form
@@ -130,8 +140,15 @@ const Login = () => {
         <button
           className="bg-blue-600 w-full text-white py-2 rounded-full"
           type="submit"
+          disabled={loading} // Disable button when loading
         >
-          {state === "Login" ? "Login" : "Create an account"}
+          {loading ? (
+            <Puff type="Puff" color="#00BFFF" height={20} width={20} /> // Show loader if loading
+          ) : state === "Login" ? (
+            "Login"
+          ) : (
+            "Create an account"
+          )}
         </button>
         {state !== "Login" ? (
           <p className="mt-5 text-center">
