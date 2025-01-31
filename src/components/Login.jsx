@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners"; // Import the spinner
+import { ClockLoader } from "react-spinners"; // Import the spinner
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -142,12 +142,11 @@ const Login = () => {
           type="submit"
           disabled={loading} // Disable button while loading
         >
+          {state === "Login" ? "Login" : "Create an account"}
           {loading ? (
-            <ClipLoader size={20} color={"#FFFFFF"} loading={loading} /> // Show loader if loading
-          ) : state === "Login" ? (
-            "Login"
+            <ClockLoader size={30} color={"#FFFFFF"} loading={loading} /> // Show loader if loading
           ) : (
-            "Create an account"
+            ""
           )}
         </button>
         {state !== "Login" ? (
