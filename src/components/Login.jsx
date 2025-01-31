@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Puff } from "react-loader-spinner"; // Import Puff loader
+import { ClipLoader } from "react-spinners"; // Import the spinner
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -19,7 +19,7 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loader
+    setLoading(true); // Start loading spinner
 
     try {
       console.log(backendUrl);
@@ -65,7 +65,7 @@ const Login = () => {
     } catch (e) {
       toast.error(e.response.data.message);
     } finally {
-      setLoading(false); // Stop loader
+      setLoading(false); // Stop loading spinner
     }
   };
 
@@ -140,10 +140,10 @@ const Login = () => {
         <button
           className="bg-blue-600 w-full text-white py-2 rounded-full flex items-center justify-center"
           type="submit"
-          disabled={loading} // Disable button when loading
+          disabled={loading} // Disable button while loading
         >
           {loading ? (
-            <Puff type="Puff" color="#00BFFF" height={20} width={20} /> // Show loader if loading
+            <ClipLoader size={20} color={"#FFFFFF"} loading={loading} /> // Show loader if loading
           ) : state === "Login" ? (
             "Login"
           ) : (
