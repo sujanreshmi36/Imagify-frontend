@@ -1,19 +1,17 @@
-import axios from "axios";
-import React, { useContext, useEffect } from "react";
-import { AppContext } from "../context/AppContext";
-import { useNavigate, useSearchParams } from "react-router-dom";
-
 const Success = () => {
   const { backendUrl, token, loadCredit } = useContext(AppContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const data = searchParams.get("data"); // Get "data" parameter from URL
-  console.log(data);
+  const data = searchParams.get("data");
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
   useEffect(() => {
     const updatePayment = async () => {
       if (!data) {
         console.error("No payment data found in URL.");
+        setError("No payment data found.");
+        setLoading(false);
         return;
       }
 
@@ -27,19 +25,28 @@ const Success = () => {
         );
 
         console.log("Payment updated successfully:", response.data);
-        navigate("/");
-        loadCredit();
+        loadCredit(); // Update credit balance
+        navigate("/"); // Redirect to home or success page
       } catch (error) {
         console.error("Error updating payment:", error);
+        setError("Payment update failed. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
 
     updatePayment();
-  }, [data, token, loadCredit]);
+  }, [data, token, loadCredit, backendUrl, navigate]);
 
   return (
-    <div className="min-h-[70vh] top-0 left-0 right-0 bottom-0 z-10 flex flex-col justify-center items-center min-w-80">
-      Processing your payment...
+    <div className="min-h-[70vh] flex flex-col justify-center items-center min-w-80">
+      {loading ? (
+        <p>Processing your payment...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <p>Payment processed successfully!</p>
+      )}
     </div>
   );
 };
