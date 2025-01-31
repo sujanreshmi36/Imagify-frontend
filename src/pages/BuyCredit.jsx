@@ -4,10 +4,13 @@ import { AppContext } from "../context/AppContext";
 import { motion } from "motion/react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { ClipLoader } from "react-spinners"; // Import the spinner
 const BuyCredit = () => {
   const { user, setShowLogin, backendUrl, token } = useContext(AppContext);
+  const [loading, setLoading] = useState(false);
   const handleClick = async (e, item) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (e.target.innerText !== "Purchase") {
         setShowLogin(true);
@@ -27,6 +30,8 @@ const BuyCredit = () => {
       }
     } catch (e) {
       toast.error(e.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -60,7 +65,13 @@ const BuyCredit = () => {
               className="w-full bg-gray-800 text-white mt-8 text-sm rounded-md py-2.5 min-w-52"
               onClick={(e) => handleClick(e, item)}
             >
-              {user ? "Purchase" : "Get Started"}
+              {loading ? (
+                <ClipLoader size={20} color={"#FFFFFF"} loading={loading} /> // Show loader if loading
+              ) : user ? (
+                "Purchase"
+              ) : (
+                "Get Started"
+              )}
             </button>
           </div>
         ))}
