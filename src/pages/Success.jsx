@@ -1,10 +1,18 @@
+import {
+  useContext,
+  useState,
+  useEffect,
+  useSearchParams,
+  useNavigate,
+} from "react";
+import axios from "axios";
 const Success = () => {
   const { backendUrl, token, loadCredit } = useContext(AppContext);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const data = searchParams.get("data");
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const updatePayment = async () => {
