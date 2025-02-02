@@ -14,16 +14,55 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({ email: "", password: "" }); // Error state
   const navigate = useNavigate();
+
+  // Email validation regex
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return re.test(email);
+  };
+
+  // Password validation (at least 6 characters)
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true); // Start loading spinner
 
-    try {
-      console.log(backendUrl);
+    let formValid = true;
+    let validationErrors = { email: "", password: "" };
 
+    // Validate email
+    if (!email) {
+      validationErrors.email = "Email is required";
+      formValid = false;
+    } else if (!validateEmail(email)) {
+      validationErrors.email = "Please enter a valid email address";
+      formValid = false;
+    }
+
+    // Validate password
+    if (!password) {
+      validationErrors.password = "Password is required";
+      formValid = false;
+    } else if (!validatePassword(password)) {
+      validationErrors.password = "Password must be at least 6 characters long";
+      formValid = false;
+    }
+
+    // Set errors if validation failed
+    setErrors(validationErrors);
+
+    if (!formValid) {
+      setLoading(false);
+      return; // Stop submission if validation fails
+    }
+
+    try {
       if (state === "Login") {
         try {
           const response = await axios.post(backendUrl + "/auth/login", {
@@ -107,7 +146,6 @@ const Login = () => {
             />
           </div>
         )}
-
         <div className="flex items-center gap-2 border px-5 py-2 rounded-full mt-5">
           <img src={assets.email_icon} className="w-4" alt="" />
           <input
@@ -119,6 +157,8 @@ const Login = () => {
             required
           />
         </div>
+        {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}{" "}
+        {/* Email Error */}
         <div className="flex items-center gap-2 border px-6 py-2 rounded-full mt-5">
           <img src={assets.lock_icon} className="w-3" alt="" />
           <input
@@ -130,6 +170,10 @@ const Login = () => {
             required
           />
         </div>
+        {errors.password && (
+          <p className="text-red-500 text-xs">{errors.password}</p>
+        )}{" "}
+        {/* Password Error */}
         {state === "Login" ? (
           <p className="text-sm text-blue-600 my-4 cursor-pointer">
             Forgot password?
@@ -171,7 +215,6 @@ const Login = () => {
             </span>
           </p>
         )}
-
         <img
           src={assets.cross_icon}
           className="absolute top-5 right-5 cursor-pointer"
