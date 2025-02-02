@@ -187,14 +187,21 @@ const Login = () => {
         )}{" "}
         {/* Password Error */}
         {state === "Login" ? (
-          <p className="text-sm text-blue-600 my-4 cursor-pointer">
+          <p
+            onClick={() => {
+              navigate("/forgot");
+              setShowLogin(false);
+            }}
+            className="text-sm text-blue-600 my-4 cursor-pointer"
+          >
             Forgot password?
           </p>
         ) : (
           <p className="my-8"></p>
         )}
         <button
-          className="bg-blue-600 w-full text-white py-2 rounded-full flex items-center justify-center"
+          className={` w-full text-white py-2 rounded-full flex items-center justify-center
+            ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
           type="submit"
           disabled={loading} // Disable button while loading
         >
