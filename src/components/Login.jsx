@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners"; // Import the spinner
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Import eye icons
 
 const Login = () => {
   const [state, setState] = useState("Login");
@@ -16,6 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" }); // Error state
+  const [showPassword, setShowPassword] = useState(false); // Show password state
   const navigate = useNavigate();
 
   // Email validation regex
@@ -159,16 +161,26 @@ const Login = () => {
         </div>
         {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}{" "}
         {/* Email Error */}
-        <div className="flex items-center gap-2 border px-6 py-2 rounded-full mt-5">
+        <div className="flex items-center gap-2 border px-6 py-2 rounded-full mt-5 relative">
           <img src={assets.lock_icon} className="w-3" alt="" />
           <input
-            className="outline-none text-sm"
-            type="password"
+            className="outline-none text-sm w-full"
+            type={showPassword ? "text" : "password"} // Toggle password visibility
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
           />
+          <span
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            onClick={() => setShowPassword((prev) => !prev)} // Toggle show password
+          >
+            {showPassword ? (
+              <AiOutlineEyeInvisible size={20} />
+            ) : (
+              <AiOutlineEye size={20} />
+            )}
+          </span>
         </div>
         {errors.password && (
           <p className="text-red-500 text-xs">{errors.password}</p>
