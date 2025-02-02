@@ -5,6 +5,7 @@ import {
   useSearchParams,
   useNavigate,
 } from "react";
+import { AppContext } from "../context/AppContext";
 import axios from "axios";
 const Success = () => {
   const { backendUrl, token, loadCredit } = useContext(AppContext);
