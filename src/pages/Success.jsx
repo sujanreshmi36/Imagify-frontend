@@ -1,10 +1,6 @@
-import {
-  useContext,
-  useState,
-  useEffect,
-  useSearchParams,
-  useNavigate,
-} from "react";
+import { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 const Success = () => {
