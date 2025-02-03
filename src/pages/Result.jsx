@@ -8,7 +8,7 @@ const Result = () => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
-  const { generateImage, credit } = useContext(AppContext);
+  const { generateImage } = useContext(AppContext);
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,7 +39,7 @@ const Result = () => {
             } `}
           />
         </div>
-        <p className={!loading ? "hidden" : ""}>Loading......</p>
+        <p className={!isImageLoaded ? "hidden" : ""}>Loading......</p>
       </div>
       {!isImageLoaded ? (
         <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
