@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const ResetPassword = () => {
@@ -18,7 +18,7 @@ const ResetPassword = () => {
   const token = searchParams.get("token");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-
+  const navigate = useNavigate();
   // Password validation (at least 6 characters)
   const validatePassword = (password) => password.length >= 6;
 
@@ -60,6 +60,7 @@ const ResetPassword = () => {
         toast.success("Password reset successfully");
         setPassword("");
         setConfirmPassword("");
+        navigate("/");
       } else {
         toast.error(response.data.message || "Something went wrong");
       }
