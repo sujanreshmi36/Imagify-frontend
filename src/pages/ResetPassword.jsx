@@ -6,25 +6,28 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import { useSearchParams } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
 const ResetPassword = () => {
   const { backendUrl } = useContext(AppContext);
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState({});
 
   // Password validation (at least 6 characters)
-  const validatePassword = (password) => {
-    return password.length >= 6;
-  };
+  const validatePassword = (password) => password.length >= 6;
 
   // Handle form submission
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
+    let validationErrors = {};
+    let formValid = true;
 
     // Validate password
     if (!password) {
@@ -34,25 +37,34 @@ const ResetPassword = () => {
       validationErrors.password = "Password must be at least 6 characters long";
       formValid = false;
     }
+
+    if (password !== confirmPassword) {
+      validationErrors.confirmPassword = "Passwords do not match";
+      formValid = false;
+    }
+
+    setErrors(validationErrors);
+    if (!formValid) {
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.patch(
         `${backendUrl}/auth/update-password`,
-        {
-          password,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { password },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (response.data) {
-        toast.success("Reset link sent successfully");
-        setEmail(""); // Clear input on success
+        toast.success("Password reset successfully");
+        setPassword("");
+        setConfirmPassword("");
       } else {
         toast.error(response.data.message || "Something went wrong");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to send reset link");
+      toast.error(error.response?.data?.message || "Failed to reset password");
     } finally {
       setLoading(false);
     }
@@ -69,13 +81,13 @@ const ResetPassword = () => {
         onSubmit={submitHandler}
       >
         <h1 className="text-center text-2xl font-semibold text-gray-700">
-          Forgot Password
+          Reset Password
         </h1>
         <div className="flex items-center gap-2 border px-6 py-2 rounded-full mt-5 relative">
           <img src={assets.lock_icon} className="w-3" alt="" />
           <input
             className="outline-none text-sm w-full"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
@@ -83,7 +95,7 @@ const ResetPassword = () => {
           />
           <span
             className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-            onClick={() => setShowPassword((prev) => !prev)} // Toggle show password
+            onClick={() => setShowPassword((prev) => !prev)}
           >
             {showPassword ? (
               <AiOutlineEyeInvisible size={20} />
@@ -94,7 +106,33 @@ const ResetPassword = () => {
         </div>
         {errors.password && (
           <p className="text-red-500 text-xs">{errors.password}</p>
-        )}{" "}
+        )}
+
+        <div className="flex items-center gap-2 border px-6 py-2 rounded-full mt-5 relative">
+          <img src={assets.lock_icon} className="w-3" alt="" />
+          <input
+            className="outline-none text-sm w-full"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            required
+          />
+          <span
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            onClick={() => setShowConfirmPassword((prev) => !prev)}
+          >
+            {showConfirmPassword ? (
+              <AiOutlineEyeInvisible size={20} />
+            ) : (
+              <AiOutlineEye size={20} />
+            )}
+          </span>
+        </div>
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
+        )}
+
         <button
           className={`w-full text-white py-2 mt-4 rounded-md flex items-center justify-center ${
             loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"

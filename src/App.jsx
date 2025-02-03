@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import Success from "./pages/Success";
 import Failure from "./pages/Failure";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 function App() {
   const { showLogin } = useContext(AppContext);
 
@@ -23,6 +24,7 @@ function App() {
         style={{ top: "70px", right: "20px", position: "fixed" }}
       />
       <Navbar />
+
       {showLogin && <Login />}
       <Routes>
         <Route path="/" element={<Home />} />
@@ -31,6 +33,7 @@ function App() {
         <Route path="/payment-success" element={<Success />} />
         <Route path="/payment-failure" element={<Failure />} />
         <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/reset" element={<ResetPassword />} />
       </Routes>
       <Footer />
     </div>
