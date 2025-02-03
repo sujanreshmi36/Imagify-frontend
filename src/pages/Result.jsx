@@ -39,7 +39,7 @@ const Result = () => {
             } `}
           />
         </div>
-        <p className={!isImageLoaded ? "hidden" : ""}>Loading......</p>
+        <p className={!loading ? "hidden" : ""}>Loading......</p>
       </div>
       {!isImageLoaded ? (
         <div className="flex w-full max-w-xl bg-neutral-500 text-white text-sm p-0.5 mt-10 rounded-full">
